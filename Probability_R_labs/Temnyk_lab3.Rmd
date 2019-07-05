@@ -1,0 +1,78 @@
+_______________________TASK1______________________________
+verify distribution:
+DENOTATION: X_ - sample mean
+we know that X1 + ... + Xn has Gamma(n,lambda) as sum of exp.
+Then sample mean has Gamma(n,n*lambda) distribution 
+then lambda*X_ has Gamma(n,n) to derive chi-squared distribution
+we can take 2*n*lambda*X_ and therefore we will have now Gamma(n, 1/2) 
+which is chi-squared with 2n degrees of freedom.
+```{r}
+#part1/1 task(a,b)
+set.seed(035)
+M = 1000
+N = 10
+th = 3.5
+alphas = c(0.1, 0.05, 0.01)
+#matrix with values drawn from exp distribution
+data = matrix(rexp(N*M, rate = 1/th), ncol = M)
+#make vector of means of cols
+x_ = colMeans(data)
+#take statistics with chi-squared distribution
+statistics = 2 * 1/th * N * x_ 
+# check probability of having a value of statistics in interval constructed of quantiles chi-squared distribution
+for (al in alphas){
+  cat("\n", al, ": ", sum(statistics<qchisq(1-al/2, 2*N) & statistics>qchisq(al/2, 2*N))/M, "\n", sep="")
+  #calculating length of our confidence intervals
+len_intrv = 2*n*x_/qchisq(al/2, 2*N)-2*n*x_/qchisq(1-al/2, 2*N)
+cat("interval length: ", max(len_intrv))
+}
+
+```
+
+```{r}
+#part1/2 task(a,b)
+#take statistics with normal(by CLT) distribution
+Z = sqrt(N)*(x_-th)/th
+for (al in alphas){
+  # as normal distribution is symmetric we can take abs(Z) for calculating CI, and multiply upper bound by 2 for calculating length of CI
+  cat("\n", al, ": ", sum(abs(Z)<=qnorm(1-al/2))/M, "\n", sep="")
+len_intrv = 2*(qnorm(1-al/2)*(th/sqrt(n)))
+cat("interval length: ", len_intrv)
+  }
+```
+
+```{r}
+#part1/3 task(a,b)
+sd_ = apply(data, 2, sd)
+# we use student (t) distribution when we use approximation of sigma  - sd, instead of unknown sigma 
+for (al in alphas){
+  cat("\n", al, ": ", sum(abs(x_-th)<qt(1-al/2, N-1)*sd_/sqrt(N))/M, "\n", sep="")
+  len_intrv = 2*max(qt(1-al/2, N-1)*sd_/sqrt(N) )
+  cat("interval length: ", len_intrv)
+}
+```
+The best way of constructing CI is the first one
+_______________________TASK2______________________________
+I won't comment much here because we have here basically the same, but for poisson distribution. therefore our parameter lambda will be not 1/theta, but theta. And instead of using theta as variance we use sqrt(theta)
+```{r}
+#part2/1 task(a,b)
+data2 = matrix(rpois(N*M, lambda = th), ncol = M)
+x_ = colMeans(data2)
+Z = sqrt(N)*(x_-th)/sqrt(th)
+for (al in alphas){
+  cat("\n", al, ": ", sum(abs(Z)<=qnorm(1-al/2))/M, "\n", sep="")
+len_intrv = 2*(qnorm(1-al/2)*(sqrt(th)/sqrt(n)))
+cat("interval length: ", len_intrv)
+  }
+```
+
+```{r}
+#part2/2 task(a,b)
+sd_ = apply(data, 2, sd)
+for (al in alphas){
+  cat("\n", al, ": ", sum(abs(x_-th)<qt(1-al/2, N-1)*sd_/sqrt(N))/M, "\n", sep="")
+  len_intrv = 2*max(qt(1-al/2, N-1)*sd_/sqrt(N))
+  cat("interval length: ", len_intrv)
+}
+```
+The best way of constructing CI is the second one

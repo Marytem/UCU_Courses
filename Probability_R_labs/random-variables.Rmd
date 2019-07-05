@@ -1,0 +1,72 @@
+---
+title: "R Notebook"
+output:
+  html_document: default
+  html_notebook: default
+  pdf_document: default
+---
+
+1. Generating random variables: \newline
+   p{distr} generates a cdf; 
+   d{distr} generates a pdf/pmf
+   q{distr} generates quantiles
+   r{distr} generates a sample
+   
+   {distr} can be any distribution:
+    - norm (normal)
+    - exp  (exponential)
+    - unif (uniform)
+    - gamma (gamma)
+    - chisq   (chi-square)
+    - binom (binomial)
+    - geom  (geometric)
+    - pois  (Poisson)
+   
+Example   
+   
+```{r}
+# n is the size of a sample
+n <- 10
+# m is no. of repetitions
+m <- 1000
+# generating die throws
+diethrows <- sample(1:6, prob = c(.1,.2,.2,.3,.1,.1), size = n, replace = T); diethrows
+# means of those; dtm ="diethrowmeans"
+dtm <- replicate(m, mean(sample(1:6, prob = c(.1,.2,.2,.3,.1,.1), size = n, replace = T)))
+#expected value
+expval <- sum((1:6)*c(.1,.2,.2,.3,.1,.1)); expval
+# summary of dtm
+summary(dtm)
+# histogram
+hist(dtm,
+     probability = T,
+     breaks = 20,
+     main = paste("Means of n =", n, "throws of a biased die"),
+     col = "lightblue",
+     xlab = "Means",
+     xlim = c(min(dtm),max(dtm))
+     )
+# superimpose normal distribution
+x <- seq(min(dtm),max(dtm), by = .01)
+lines(x, dnorm(x, mean = mean(dtm), sd = sd(dtm)), col ="red", lwd = 2)
+# does it agree with the LLN?
+sum(abs(dtm - expval)>.1)/m
+```
+
+
+2 Task 2
+
+1. Generate a sample of size 1000 combined from two samples of size 500 from the normal distributions N(mu,5) with mu = 0 and mu = 1 
+2. Calculate sample mean, sample standard deviation and compare with the exact values
+3.
+4. For q= 0.1,...,0.9 calculate sample q-percentiles manually 
+  (i.e. by sorting the data and picking the corresponding values) and by using percentile
+5. Compare with theoretical quantiles of that distribution
+6. Check the k-sigma rule for k=1,2,3
+7. Draw a histogram of the data
+8. Draw the theoretical density 
+
+```{r}
+#   Your code goes here
+```
+

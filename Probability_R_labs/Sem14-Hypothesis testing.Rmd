@@ -1,0 +1,92 @@
+---
+title: "Hypothesis testing for parameters of normal distribution"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+**Example 1** Testing
+$$
+  H_0\,: \mu = \mu_0 (=0) \quad \textrm{vs} \quad H_1\,: \mu = \mu_1 (= 1)
+$$
+for normal distribution $\mathscr{N}(\mu,\sigma^2)$ with **known** $\sigma^2$  
+
+This is a $z$-test, based on the fact that under $H_0$ the distribution of the $Z$-statistics is standard normal:
+$$
+    Z : = \frac{\sqrt{\sigma}}{n}(\overline{\mathbf{X}} - \mu_0) \sim \mathscr{N}(0,1) \qquad {\text{under}} \quad H_0
+$$
+Alternative $H_1$ can be *one-sided* ($\mu>\mu_0$ or $\mu < \mu_0$) or *two-sided* ($\mu \ne \mu_0$); the corresponding $z$-test will also be one- or two-sided
+
+
+```{r}
+N <- 100  # sample size
+##  data generation; observe that actually two different normal distribution are mixed up
+x <- rnorm(N, mean = c(-2,2), sd = c(1,2))
+##  IMPORTANT: requires BSDA-package
+z.test(x, mu = 0, alternative = "greater", sigma.x = 1.5)
+
+```
+
+**Remark** z-test is rarely used in practice since usually $\sigma$ is not known 
+
+**Example 2** _When $\sigma^2$ is not known, the `t.test` is used; the corresponding $T$-statistics_
+
+$$
+  T(X) := \frac{\sqrt{n}}{S}(\overline{\mathbf{X}} - \mu_0) = \frac{Z}{S/\sigma}
+$$
+has the *Student* $\mathscr{T}_{n-1}$-distribution under $H_0$. Therefore, it is enough to replace $z$-statistics and quantiles with $t$-statistics and quantiles
+```{r}
+t.test(x, alternative = "two.sided")    ## test the (default) H_0: mu = 0 vs H_1: mu \ne 0
+```
+
+**Example 3** _Comparison of two means_
+
+```{r}
+# test the hypothesis that mu_x is larger than mu_y
+z.test(x=x[x<0], y=x[x>0], sigma.x = 1, sigma.y = 2, alternative = "l")
+# clearly, we should stick to the alternative here
+```
+
+
+**Example 4** _Hypothesis testing for variances (one sample)_
+$$
+  H_0\,: \sigma^2 = \sigma^2_0 \quad \textrm{vs} \quad H_1\,: \sigma^2 > \sigma^2_0 \qquad  (\textrm{or}\  <,\ \ne)
+$$
+
+```{r}
+## 
+## requires package EnvStats
+##
+varTest(x, sigma.squared = 1, alternative = "g")
+```
+
+**Example 5** _Hypothesis testing for variances (two means)_ 
+
+```{r}
+var.test(x[x<0],x[x>0], alternative = "l")
+```
+
+
+**Problem 1** Hypothesis testing for normal distribution $\mathscr{N}(\mu,\sigma^2)$   
+1. Generate $100$ values of data `x` with exponential distribution $\mathscr{E}(\lambda)$  for  
+- (a) $\lambda=1$   
+- (b) $\lambda = 5$  
+2. Form `y` as `-2*x`    
+3. Test hypotheses  
+
+  (a) $H_0\,: \mu = 1 \quad \textrm{vs} \quad H_1\,: \mu < 1$  
+  (b) $H_0\,: \mu_x = \mu_y \quad \textrm{vs} \quad H_1\,: \mu_x > \mu_y$  
+  (c) $H_0\,: \sigma^2 = 1 \quad \textrm{vs} \quad H_1\,: \sigma^2 > 1$  
+  (d) $H_0\,: \sigma^2_x = \sigma_y^2 \quad \textrm{vs} \quad H_1\,: \sigma^2_x < \sigma_y^2$ 
+
+
+4. For each test, provide a discussion of the results (p-value etc) and the decision to be made  
+   Comment on whether or not the results are expected in view of the special way the data are formed
+   
+5. Submit results as an `R Notebook`
+
+```{r}
+## Your code and explanations here
+```
+
+

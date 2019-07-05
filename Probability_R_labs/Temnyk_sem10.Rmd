@@ -1,0 +1,56 @@
+
+# 1
+
+```{r}
+#   your code here
+#task1
+a <- seq(-2, 1, length=100)
+#task2
+b <- a[seq(2, 100, by = 2)]
+#task3
+a+b; a-b; a*b; a/b
+#task4
+sum(a); prod(a); mean(a); var(a); sd(a); median(a); quantile(a, c(.25, .75))
+#task5
+summary(a)
+```
+
+
+
+#2
+
+```{r}
+#   Your code goes here
+#task1
+n <- 1000
+mydist <- rnorm(n,mean = c(0,1), sd = sqrt(5))
+#task2
+mean(mydist) == 0.5; sd(mydist) == sqrt(5);
+#task4
+q <- seq(0.1, 0.9, by = 0.1)
+func_quat <- quantile(mydist, q)
+manual_quant <- sort(mydist)[seq(100, 900, b = 100)]
+#task5
+theor_quant <- qnorm(q, mean = 0.5, sd = sqrt(5), lower.tail = TRUE, log.p = FALSE)
+func_quat==theor_quant
+manual_quant==theor_quant
+#task6
+for (k in c(1,2,3)) {
+  sigsum <- 0
+  for (el in mydist) {
+    if (el > (0.5 - k * sqrt(5)) && el<(0.5 + k*sqrt(5))){
+      sigsum = sigsum + 1
+    }
+  }
+  print(sigsum/length(mydist))
+}
+#task7
+hist(mydist,
+     probability = T,
+     breaks = 20,
+     xlim = c(min(mydist),max(mydist))
+)
+mydist <- sort(mydist)
+#task8
+lines(mydist, dnorm(mydist, mean = mean(mydist), sd = sd(mydist)), col ="red", lwd = 4)
+```
