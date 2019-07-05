@@ -1,0 +1,4 @@
+Logistic regression chooses coefficients for every word in the message-vector, but the vector has only one recording for that word and no info on frequency, therefore if you put a lot of normal words in the message, filter will accept such message.
+
+To be able to filter such a message out, we need to pay attention to sequences of words in a message. 
+Or we could use another approach. Maybe we can divide a message into parts and find out the topic of the chunks of text. Then decide if they're relevant for the user or not. If there are not enough relevant chunks the filter classifies it as spam.
